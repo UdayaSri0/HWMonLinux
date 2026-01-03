@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "lIMeEXta/rr9ro4ydbBtLUzPfcjO9lOsYIfo/z7CXEI0UfNv1x65tnivvPOKhcvmATa9TMetuWJMD0YRQEb6SA==",
+  "success": true,
+  "projectFilePath": "/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj",
+  "expectedPackageFiles": [
+    "/home/lenovo/.nuget/packages/system.threading.channels/8.0.0/system.threading.channels.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

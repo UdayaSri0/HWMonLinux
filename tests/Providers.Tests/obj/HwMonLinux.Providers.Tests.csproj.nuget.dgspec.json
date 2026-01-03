@@ -1,0 +1,202 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/lenovo/Documents/Projects/HwMonLinux/tests/Providers.Tests/HwMonLinux.Providers.Tests.csproj": {}
+  },
+  "projects": {
+    "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj",
+        "projectName": "HwMonLinux.Core",
+        "projectPath": "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj",
+        "packagesPath": "/home/lenovo/.nuget/packages/",
+        "outputPath": "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/lenovo/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.122/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj",
+        "projectName": "HwMonLinux.Providers",
+        "projectPath": "/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj",
+        "packagesPath": "/home/lenovo/.nuget/packages/",
+        "outputPath": "/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/lenovo/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj": {
+                "projectPath": "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "System.Threading.Channels": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.122/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/lenovo/Documents/Projects/HwMonLinux/tests/Providers.Tests/HwMonLinux.Providers.Tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/lenovo/Documents/Projects/HwMonLinux/tests/Providers.Tests/HwMonLinux.Providers.Tests.csproj",
+        "projectName": "HwMonLinux.Providers.Tests",
+        "projectPath": "/home/lenovo/Documents/Projects/HwMonLinux/tests/Providers.Tests/HwMonLinux.Providers.Tests.csproj",
+        "packagesPath": "/home/lenovo/.nuget/packages/",
+        "outputPath": "/home/lenovo/Documents/Projects/HwMonLinux/tests/Providers.Tests/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/lenovo/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj": {
+                "projectPath": "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj"
+              },
+              "/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj": {
+                "projectPath": "/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.8.0, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.5.3, )"
+            },
+            "xunit.runner.visualstudio": {
+              "target": "Package",
+              "version": "[2.5.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.122/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

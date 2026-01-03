@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{957F1CF8-F903-474E-B241-AD718151F92E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{1BDB19E1-DB54-4062-B637-781B74A35752}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HwMonLinux.Core", "src\Core\HwMonLinux.Core\HwMonLinux.Core.csproj", "{1F6279B8-5021-4EB8-9CAC-472B6E21BF2A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{1DBB7BFD-7B1D-4C47-A9A5-0F9EAF592777}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HwMonLinux.Providers", "src\Providers\HwMonLinux.Providers\HwMonLinux.Providers.csproj", "{9A94B82D-894B-4341-BE1A-C921FE25E1DF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{CD6859CB-027F-4E92-99CE-0BA352758B21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HwMonLinux.App", "src\App\HwMonLinux.App\HwMonLinux.App.csproj", "{66B895E4-6C57-4D39-9365-2A823E6EF845}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{868566FD-5CEA-4B3E-9603-29C17C645BA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HwMonLinux.Providers.Tests", "tests\Providers.Tests\HwMonLinux.Providers.Tests.csproj", "{05AEAD17-D3EA-4864-8BE1-9B91E5190719}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1F6279B8-5021-4EB8-9CAC-472B6E21BF2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F6279B8-5021-4EB8-9CAC-472B6E21BF2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F6279B8-5021-4EB8-9CAC-472B6E21BF2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F6279B8-5021-4EB8-9CAC-472B6E21BF2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A94B82D-894B-4341-BE1A-C921FE25E1DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A94B82D-894B-4341-BE1A-C921FE25E1DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A94B82D-894B-4341-BE1A-C921FE25E1DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A94B82D-894B-4341-BE1A-C921FE25E1DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66B895E4-6C57-4D39-9365-2A823E6EF845}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66B895E4-6C57-4D39-9365-2A823E6EF845}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66B895E4-6C57-4D39-9365-2A823E6EF845}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66B895E4-6C57-4D39-9365-2A823E6EF845}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05AEAD17-D3EA-4864-8BE1-9B91E5190719}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05AEAD17-D3EA-4864-8BE1-9B91E5190719}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05AEAD17-D3EA-4864-8BE1-9B91E5190719}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05AEAD17-D3EA-4864-8BE1-9B91E5190719}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1BDB19E1-DB54-4062-B637-781B74A35752} = {957F1CF8-F903-474E-B241-AD718151F92E}
+		{1F6279B8-5021-4EB8-9CAC-472B6E21BF2A} = {1BDB19E1-DB54-4062-B637-781B74A35752}
+		{1DBB7BFD-7B1D-4C47-A9A5-0F9EAF592777} = {957F1CF8-F903-474E-B241-AD718151F92E}
+		{9A94B82D-894B-4341-BE1A-C921FE25E1DF} = {1DBB7BFD-7B1D-4C47-A9A5-0F9EAF592777}
+		{CD6859CB-027F-4E92-99CE-0BA352758B21} = {957F1CF8-F903-474E-B241-AD718151F92E}
+		{66B895E4-6C57-4D39-9365-2A823E6EF845} = {CD6859CB-027F-4E92-99CE-0BA352758B21}
+		{05AEAD17-D3EA-4864-8BE1-9B91E5190719} = {868566FD-5CEA-4B3E-9603-29C17C645BA6}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,107 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:HwMonLinux.App.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DesignWidth="1200"
+        d:DesignHeight="700"
+        x:Class="HwMonLinux.App.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="HWMon Linux Monitor"
+        Width="1100"
+        Height="720">
+
+    <Grid RowDefinitions="Auto,Auto,*" Margin="20">
+        <Border CornerRadius="8" Padding="16" Background="{DynamicResource ThemeBackgroundBrush}">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="16" RowDefinitions="Auto,Auto">
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <TextBlock Text="HWMon Linux"
+                               FontSize="22"
+                               FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding LastUpdated, StringFormat='Updated {0:T}'}"
+                               Foreground="{DynamicResource ThemeForegroundLowBrush}"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="2" Spacing="8" VerticalAlignment="Center">
+                    <TextBlock Text="Refresh"
+                               Foreground="{DynamicResource ThemeForegroundLowBrush}"
+                               VerticalAlignment="Center"/>
+                    <Slider Minimum="0.5"
+                            Maximum="10"
+                            Width="160"
+                            Value="{Binding RefreshIntervalSeconds, Mode=TwoWay}"/>
+                    <TextBlock Text="{Binding RefreshIntervalSeconds, StringFormat='{}{0:F1}s'}"
+                               Width="60"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <TextBlock Grid.Row="1"
+                           Grid.ColumnSpan="4"
+                           Foreground="{DynamicResource ThemeForegroundLowBrush}"
+                           Text="{Binding WarningText}"
+                           TextWrapping="Wrap"
+                           Margin="0,8,0,0"
+                           IsVisible="{Binding HasWarnings}"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Margin="0,16,0,0" Padding="12" CornerRadius="8" Background="{DynamicResource ThemeBackgroundBrush}">
+            <ItemsControl ItemsSource="{Binding SensorCards}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel ItemWidth="250"
+                                   MinWidth="250"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:SensorCardViewModel">
+                        <Border CornerRadius="12" Padding="16" Background="{DynamicResource ThemeBackgroundBrush}">
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="{Binding Title}" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding Value}" FontSize="24" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Subtitle}" Foreground="{DynamicResource ThemeForegroundLowBrush}" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+
+        <Grid Grid.Row="2" Margin="0,16,0,0" RowDefinitions="Auto,*" RowSpacing="8">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBox Width="280"
+                         Watermark="Search sensors"
+                         Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="{Binding Sensors.Count, StringFormat='{}{0} sensors visible'}"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource ThemeForegroundLowBrush}"/>
+            </StackPanel>
+
+            <DataGrid Grid.Row="1"
+                      ItemsSource="{Binding Sensors}"
+                      AutoGenerateColumns="False"
+                      HeadersVisibility="Column"
+                      CanUserReorderColumns="False"
+                      CanUserSortColumns="True"
+                      GridLinesVisibility="Horizontal"
+                      IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Width="2*"
+                                         Binding="{CompiledBinding Path=Name, DataType=vm:SensorRowViewModel}"/>
+                    <DataGridTextColumn Header="Value" Width="*"
+                                         Binding="{CompiledBinding Path=Value, DataType=vm:SensorRowViewModel}" />
+                    <DataGridTextColumn Header="Type" Width="*"
+                                         Binding="{CompiledBinding Path=Type, DataType=vm:SensorRowViewModel}" />
+                    <DataGridTextColumn Header="Source" Width="*"
+                                         Binding="{CompiledBinding Path=Source, DataType=vm:SensorRowViewModel}" />
+                    <DataGridTextColumn Header="Details" Width="2*"
+                                         Binding="{CompiledBinding Path=Description, DataType=vm:SensorRowViewModel}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>

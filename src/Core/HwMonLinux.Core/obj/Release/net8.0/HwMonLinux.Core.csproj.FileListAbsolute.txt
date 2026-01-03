@@ -1,0 +1,11 @@
+/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/bin/Release/net8.0/HwMonLinux.Core.deps.json
+/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/bin/Release/net8.0/HwMonLinux.Core.dll
+/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/bin/Release/net8.0/HwMonLinux.Core.pdb
+/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/Release/net8.0/HwMonLinux.Core.GeneratedMSBuildEditorConfig.editorconfig
+/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/Release/net8.0/HwMonLinux.Core.AssemblyInfoInputs.cache
+/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/Release/net8.0/HwMonLinux.Core.AssemblyInfo.cs
+/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/Release/net8.0/HwMonLinux.Core.csproj.CoreCompileInputs.cache
+/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/Release/net8.0/HwMonLinux.Core.dll
+/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/Release/net8.0/refint/HwMonLinux.Core.dll
+/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/Release/net8.0/HwMonLinux.Core.pdb
+/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/Release/net8.0/ref/HwMonLinux.Core.dll
