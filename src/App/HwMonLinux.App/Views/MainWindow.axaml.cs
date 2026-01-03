@@ -1,5 +1,6 @@
 using System;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 namespace HwMonLinux.App.Views;
 
@@ -17,5 +18,11 @@ public partial class MainWindow : Window
         {
             disposable.Dispose();
         }
+    }
+
+    private async void OnAboutClick(object? sender, RoutedEventArgs e)
+    {
+        var window = new AboutWindow();
+        await window.ShowDialog(this);
     }
 }

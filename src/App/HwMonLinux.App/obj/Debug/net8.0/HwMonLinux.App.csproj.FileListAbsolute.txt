@@ -72,9 +72,10 @@
 /home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Debug/net8.0/HwMonLinux.App.AssemblyInfoInputs.cache
 /home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Debug/net8.0/HwMonLinux.App.AssemblyInfo.cs
 /home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Debug/net8.0/HwMonLinux.App.csproj.CoreCompileInputs.cache
+/home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Debug/net8.0/HwMonLinux.App.sourcelink.json
+/home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Debug/net8.0/HwMonLinux.App.csproj.CopyComplete
 /home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Debug/net8.0/HwMonLinux.App.dll
 /home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Debug/net8.0/refint/HwMonLinux.App.dll
 /home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Debug/net8.0/HwMonLinux.App.pdb
 /home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Debug/net8.0/HwMonLinux.App.genruntimeconfig.cache
 /home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Debug/net8.0/ref/HwMonLinux.App.dll
-/home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Debug/net8.0/HwMonLinux.App.csproj.CopyComplete

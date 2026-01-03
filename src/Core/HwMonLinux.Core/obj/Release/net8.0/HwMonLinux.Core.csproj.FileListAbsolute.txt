@@ -9,3 +9,4 @@
 /home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/Release/net8.0/refint/HwMonLinux.Core.dll
 /home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/Release/net8.0/HwMonLinux.Core.pdb
 /home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/Release/net8.0/ref/HwMonLinux.Core.dll
+/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/Release/net8.0/HwMonLinux.Core.sourcelink.json

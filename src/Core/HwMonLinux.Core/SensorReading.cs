@@ -6,26 +6,63 @@ namespace HwMonLinux.Core;
 /// <summary>
 /// Represents a single sensor reading value captured at a point in time.
 /// </summary>
-public sealed record SensorReading(
-    string Id,
-    string Name,
-    SensorType Type,
-    double? Value,
-    string Unit,
-    string Source,
-    string? TextValue = null,
-    string? Description = null,
-    IReadOnlyDictionary<string, string>? Metadata = null)
+public sealed class SensorReading
 {
     private static readonly ConcurrentDictionary<string, Func<double, string>> Formatters = new();
 
+    public SensorReading(
+        string id,
+        IReadOnlyList<string>? groupPath,
+        string name,
+        SensorType type,
+        double? value,
+        string unit,
+        string source,
+        DateTimeOffset timestamp,
+        string? textValue = null,
+        string? description = null,
+        IReadOnlyDictionary<string, string>? metadata = null)
+    {
+        Id = id;
+        GroupPath = groupPath is null
+            ? Array.Empty<string>()
+            : groupPath.Where(segment => !string.IsNullOrWhiteSpace(segment))
+                .Select(segment => segment.Trim())
+                .ToArray();
+        Name = name;
+        Type = type;
+        Value = value;
+        Unit = unit;
+        Source = source;
+        Timestamp = timestamp;
+        TextValue = textValue;
+        Description = description;
+        Metadata = metadata;
+    }
+
+    public string Id { get; }
+    public IReadOnlyList<string> GroupPath { get; }
+    public string Name { get; }
+    public SensorType Type { get; }
+    public double? Value { get; }
+    public string Unit { get; }
+    public string Source { get; }
+    public DateTimeOffset Timestamp { get; }
+    public string? TextValue { get; }
+    public string? Description { get; }
+    public IReadOnlyDictionary<string, string>? Metadata { get; }
+
+    public string GroupKey => GroupPath.Count == 0
+        ? "Ungrouped"
+        : string.Join("/", GroupPath);
+
     public string FormattedValue => TextValue ?? (Value.HasValue
-        ? FormatValue(Value.Value, Unit)
+        ? Format(Value.Value, Unit)
         : "Not available");
 
-    private static string FormatValue(double value, string unit)
+    public static string Format(double value, string unit)
     {
-        var formatter = Formatters.GetOrAdd(unit, CreateFormatter);
+        var formatter = Formatters.GetOrAdd(unit ?? string.Empty, CreateFormatter);
         return formatter(value);
     }
 
@@ -37,6 +74,10 @@ public sealed record SensorReading(
         "RPM" => v => $"{v:F0} rpm",
         "GB" => v => $"{v:F1} GB",
         "GiB" => v => $"{v:F1} GiB",
+        "W" => v => $"{v:F1} W",
+        "V" => v => $"{v:F3} V",
+        "A" => v => $"{v:F2} A",
+        "mWh" => v => $"{v:F0} mWh",
         "%" => v => $"{v:F1} %",
         _ => v => $"{v.ToString(CultureInfo.InvariantCulture)} {unit}".Trim()
     };

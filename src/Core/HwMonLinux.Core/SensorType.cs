@@ -12,12 +12,21 @@ public enum SensorType
     CpuFrequency,
     MemoryUsage,
     MemoryAvailable,
+    MemoryUsed,
     FanSpeed,
+    Voltage,
+    Power,
+    Current,
+    Energy,
     DiskHealth,
     DiskTemperature,
     DiskUsage,
     GpuTemperature,
     GpuLoad,
     GpuMemoryUsage,
-    GpuFanSpeed
+    GpuFanSpeed,
+    BatteryPercentage,
+    BatteryTemperature,
+    BatteryCurrent,
+    BatteryVoltage
 }

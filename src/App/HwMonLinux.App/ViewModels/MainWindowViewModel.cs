@@ -1,26 +1,28 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
+using CommunityToolkit.Mvvm.Input;
 using HwMonLinux.Core;
 using HwMonLinux.Providers.Services;
 
 namespace HwMonLinux.App.ViewModels;
 
-public sealed class MainWindowViewModel : ViewModelBase, IDisposable
+public sealed partial class MainWindowViewModel : ViewModelBase, IDisposable
 {
     private readonly SensorCollectorService _collector;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly ObservableCollection<SensorCardViewModel> _cardCollection = new();
-    private readonly ObservableCollection<SensorRowViewModel> _filteredRows = new();
+    private readonly ObservableCollection<SensorTreeNode> _rootNodes = new();
     private readonly Dictionary<string, SensorRowViewModel> _rowLookup = new(StringComparer.OrdinalIgnoreCase);
+    private readonly SensorStatsStore _statsStore = new();
     private readonly List<CardBinding> _cardBindings;
-    private double _refreshIntervalSeconds;
     private bool _isDisposed;
-
+    private double _refreshIntervalSeconds;
     private string _filterText = string.Empty;
     private DateTimeOffset _lastUpdated = DateTimeOffset.MinValue;
     private string? _warningText;
@@ -30,7 +32,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IDisposable
         _collector = collector;
         _refreshIntervalSeconds = Math.Round(_collector.RefreshInterval.TotalSeconds, 1);
         SensorCards = new ReadOnlyObservableCollection<SensorCardViewModel>(_cardCollection);
-        Sensors = new ReadOnlyObservableCollection<SensorRowViewModel>(_filteredRows);
+        RootNodes = new ReadOnlyObservableCollection<SensorTreeNode>(_rootNodes);
 
         _cardBindings = CreateCardBindings();
         foreach (var binding in _cardBindings)
@@ -43,7 +45,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IDisposable
 
     public ReadOnlyObservableCollection<SensorCardViewModel> SensorCards { get; }
 
-    public ReadOnlyObservableCollection<SensorRowViewModel> Sensors { get; }
+    public ReadOnlyObservableCollection<SensorTreeNode> RootNodes { get; }
 
     public string FilterText
     {
@@ -94,6 +96,18 @@ public sealed class MainWindowViewModel : ViewModelBase, IDisposable
 
     public bool HasWarnings => !string.IsNullOrWhiteSpace(_warningText);
 
+    [RelayCommand]
+    private void ResetStats()
+    {
+        _statsStore.Reset();
+        foreach (var row in _rowLookup.Values)
+        {
+            row.ApplyStats(null, null);
+        }
+
+        ApplyFilter();
+    }
+
     public void Dispose()
     {
         if (_isDisposed)
@@ -117,7 +131,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IDisposable
         }
         catch (OperationCanceledException)
         {
-            // Ignored on shutdown.
+            // Expected when shutting down.
         }
     }
 
@@ -152,6 +166,8 @@ public sealed class MainWindowViewModel : ViewModelBase, IDisposable
             }
 
             row.UpdateFromReading(reading);
+            var (min, max) = _statsStore.Update(reading);
+            row.ApplyStats(min, max);
         }
 
         ApplyFilter();
@@ -160,30 +176,46 @@ public sealed class MainWindowViewModel : ViewModelBase, IDisposable
     private void ApplyFilter()
     {
         var filter = FilterText?.Trim();
-        IEnumerable<SensorRowViewModel> source = _rowLookup.Values;
-
-        if (!string.IsNullOrWhiteSpace(filter))
-        {
-            source = source.Where(row =>
-                row.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
-                row.Type.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
-                row.Source.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
-                (row.Description?.Contains(filter, StringComparison.OrdinalIgnoreCase) ?? false));
-        }
-
-        var ordered = source
-            .OrderBy(row => row.Name, StringComparer.OrdinalIgnoreCase)
+        var rows = _rowLookup.Values
+            .Where(row => row.MatchesFilter(filter))
             .ToList();
 
-        SynchronizeCollection(_filteredRows, ordered);
+        var nodes = BuildTree(rows);
+        SynchronizeTree(nodes);
     }
 
-    private static void SynchronizeCollection<T>(ObservableCollection<T> target, IReadOnlyList<T> items)
+    private IReadOnlyList<SensorTreeNode> BuildTree(IReadOnlyList<SensorRowViewModel> rows)
     {
-        target.Clear();
-        for (var i = 0; i < items.Count; i++)
+        var root = new SensorTreeNode("root");
+        foreach (var row in rows.OrderBy(r => string.Join("/", r.GroupPath)).ThenBy(r => r.Name, StringComparer.OrdinalIgnoreCase))
         {
-            target.Add(items[i]);
+            var segments = row.GroupPath.Count > 0
+                ? row.GroupPath
+                : ImmutableArray.Create("Ungrouped");
+
+            var parent = root;
+            foreach (var segment in segments)
+            {
+                parent = parent.GetOrAddChild(segment);
+            }
+
+            parent.Children.Add(new SensorTreeNode(row.Name, row));
+        }
+
+        foreach (var child in root.Children)
+        {
+            child.SortChildren();
+        }
+
+        return root.Children.ToList();
+    }
+
+    private void SynchronizeTree(IReadOnlyList<SensorTreeNode> nodes)
+    {
+        _rootNodes.Clear();
+        foreach (var node in nodes)
+        {
+            _rootNodes.Add(node);
         }
     }
 

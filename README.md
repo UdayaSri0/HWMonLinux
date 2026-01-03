@@ -4,12 +4,12 @@ HWMon Linux is an open-source hardware monitoring desktop app for Debian-based d
 
 ### Features
 
-- Live refresh of CPU temperature, CPU load (delta from `/proc/stat`), per-core frequencies, and RAM usage from `/proc/meminfo`.
-- Sysfs `hwmon` reader for temperatures and fan RPM with graceful fallbacks when files are missing.
-- Optional disk SMART parsing via `smartctl -j` and NVIDIA GPU stats via `nvidia-smi` (auto-detects availability).
-- MVVM UI with summary cards + searchable sensor table, and adjustable refresh interval (0.5s – 10s).
-- Sensor collector service that aggregates providers asynchronously and streams `Snapshot` updates with warning messages instead of crashing when a provider fails.
-- Basic parser unit tests and GitHub Actions workflow building/testing on Ubuntu.
+- **Rich provider stack**: JSON `lm-sensors` data (temps/fans/voltages/power), cpu freq from `/sys/devices/system/cpu`, `/proc/stat` CPU load, `/proc/meminfo` RAM, SMART health/temps via `lsblk+smartctl`, NVIDIA `nvidia-smi`, GPU sysfs fallback (AMD/Intel), laptop battery telemetry, and sysfs `hwmon` fallback.
+- **Live dashboard**: summary cards (CPU temp, CPU load, RAM usage), adjustable polling interval, warning banner for degraded providers.
+- **Tree view explorer**: TreeDataGrid groups sensors (CPU/Temperatures, GPU/NVIDIA, Disks/NVMe0, Power/BAT0, …) with Value/Min/Max columns and instant search filtering; Min/Max tracked over time with a reset button.
+- **Branding & help**: Help → About dialog highlights author (Udaya Sri), repo link, license, and version.
+- **Resilience**: Providers auto-skip when binaries/files are missing; every reading carries timestamps and metadata for logging/alerts later.
+- **CI/tests**: Parser unit tests plus GitHub Actions build/test on Ubuntu.
 
 ### Architecture
 
@@ -30,8 +30,10 @@ HwMonLinux.sln
 - .NET 8 SDK
 - Debian-based distribution with access to `/sys` and `/proc`
 - Optional tools for richer data:
-  - `sudo apt install smartmontools` for disk SMART
-  - `nvidia-smi` (from proprietary NVIDIA driver) for GPU telemetry
+  - `sudo apt install lm-sensors` – enables the JSON `sensors -j` provider (run `sudo sensors-detect` once, then `sudo service kmod start` if needed)
+  - `sudo apt install smartmontools` – exposes SMART health/temp via `smartctl -j -a`
+  - `nvidia-smi` binary (bundled with proprietary NVIDIA driver) for rich GPU stats
+  - For laptop telemetry: ensure `/sys/class/power_supply/BAT*` exists (standard on Linux Mint/Ubuntu)
 
 ### Getting Started
 

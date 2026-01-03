@@ -34,12 +34,15 @@ public partial class App : Application
             var processRunner = new ProcessRunner(TimeSpan.FromSeconds(3));
             var providers = new ISensorProvider[]
             {
-                new HwMonSensorProvider(),
+                new LmSensorsJsonProvider(processRunner),
+                new SysfsHwmonProvider(),
                 new CpuLoadProvider(),
+                new CpuFreqProvider(),
                 new MemoryInfoProvider(),
-                new CpuFrequencyProvider(),
-                new SmartCtlProvider(processRunner),
-                new NvidiaSmiProvider(processRunner)
+                new DiskSmartProvider(processRunner),
+                new NvidiaSmiProvider(processRunner),
+                new GpuSysfsProvider(),
+                new BatteryProvider()
             };
 
             _collector = new SensorCollectorService(providers, RefreshOptions.Default);

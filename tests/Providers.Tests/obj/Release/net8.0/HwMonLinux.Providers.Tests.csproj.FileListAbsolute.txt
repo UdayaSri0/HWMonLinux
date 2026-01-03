@@ -100,4 +100,5 @@
 /home/lenovo/Documents/Projects/HwMonLinux/tests/Providers.Tests/obj/Release/net8.0/HwMonLinux.Providers.Tests.pdb
 /home/lenovo/Documents/Projects/HwMonLinux/tests/Providers.Tests/obj/Release/net8.0/HwMonLinux.Providers.Tests.genruntimeconfig.cache
 /home/lenovo/Documents/Projects/HwMonLinux/tests/Providers.Tests/obj/Release/net8.0/ref/HwMonLinux.Providers.Tests.dll
+/home/lenovo/Documents/Projects/HwMonLinux/tests/Providers.Tests/obj/Release/net8.0/HwMonLinux.Providers.Tests.sourcelink.json
 /home/lenovo/Documents/Projects/HwMonLinux/tests/Providers.Tests/obj/Release/net8.0/HwMonLinux.Providers.Tests.csproj.CopyComplete

@@ -22,5 +22,8 @@ build_property.EnableGeneratedComInterfaceComImportInterop =
 [/home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/Views/AboutWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

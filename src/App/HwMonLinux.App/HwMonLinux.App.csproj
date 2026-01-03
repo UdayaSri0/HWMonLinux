@@ -30,4 +30,5 @@
     <ProjectReference Include="..\..\Core\HwMonLinux.Core\HwMonLinux.Core.csproj" />
     <ProjectReference Include="..\..\Providers\HwMonLinux.Providers\HwMonLinux.Providers.csproj" />
   </ItemGroup>
+
 </Project>

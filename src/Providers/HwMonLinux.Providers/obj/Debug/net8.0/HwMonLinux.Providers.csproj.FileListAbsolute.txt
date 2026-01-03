@@ -8,6 +8,7 @@
 /home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/Debug/net8.0/HwMonLinux.Providers.AssemblyInfoInputs.cache
 /home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/Debug/net8.0/HwMonLinux.Providers.AssemblyInfo.cs
 /home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/Debug/net8.0/HwMonLinux.Providers.csproj.CoreCompileInputs.cache
+/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/Debug/net8.0/HwMonLinux.Providers.sourcelink.json
 /home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/Debug/net8.0/HwMonLinux.Providers.dll
 /home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/Debug/net8.0/refint/HwMonLinux.Providers.dll
 /home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/Debug/net8.0/HwMonLinux.Providers.pdb

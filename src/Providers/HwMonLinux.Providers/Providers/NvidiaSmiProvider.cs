@@ -20,7 +20,7 @@ public sealed class NvidiaSmiProvider : ISensorProvider
 
     public async Task<IReadOnlyCollection<SensorReading>> GetSensorReadingsAsync(CancellationToken cancellationToken)
     {
-        var args = "--query-gpu=index,name,temperature.gpu,utilization.gpu,fan.speed --format=csv,noheader,nounits";
+        var args = "--query-gpu=index,name,temperature.gpu,utilization.gpu,fan.speed,memory.used,memory.total --format=csv,noheader,nounits";
         var result = await _processRunner.RunAsync("nvidia-smi", args, cancellationToken).ConfigureAwait(false);
         if (!result.IsSuccess)
         {
@@ -44,17 +44,55 @@ public sealed class NvidiaSmiProvider : ISensorProvider
 
             if (TryParseDouble(parts[2], out var temp))
             {
-                sensors.Add(new SensorReading($"gpu.{index}.temp", $"{name} Temp", SensorType.GpuTemperature, temp, "C", Name));
+                sensors.Add(SensorFactory.Create(
+                    $"gpu.{index}.temp",
+                    GroupPath.From("GPU", $"NVIDIA {name}", "Temperatures"),
+                    $"{name} Temp",
+                    SensorType.GpuTemperature,
+                    temp,
+                    "C",
+                    Name));
             }
 
             if (TryParseDouble(parts[3], out var load))
             {
-                sensors.Add(new SensorReading($"gpu.{index}.load", $"{name} Load", SensorType.GpuLoad, load, "%", Name));
+                sensors.Add(SensorFactory.Create(
+                    $"gpu.{index}.load",
+                    GroupPath.From("GPU", $"NVIDIA {name}", "Load"),
+                    $"{name} Load",
+                    SensorType.GpuLoad,
+                    load,
+                    "%",
+                    Name));
             }
 
             if (TryParseDouble(parts[4], out var fan))
             {
-                sensors.Add(new SensorReading($"gpu.{index}.fan", $"{name} Fan", SensorType.GpuFanSpeed, fan, "%", Name));
+                sensors.Add(SensorFactory.Create(
+                    $"gpu.{index}.fan",
+                    GroupPath.From("GPU", $"NVIDIA {name}", "Cooling"),
+                    $"{name} Fan",
+                    SensorType.GpuFanSpeed,
+                    fan,
+                    "%",
+                    Name));
+            }
+
+            if (parts.Length >= 7 &&
+                TryParseDouble(parts[5], out var memUsed) &&
+                TryParseDouble(parts[6], out var memTotal) &&
+                memTotal > 0.01)
+            {
+                var percent = Math.Clamp(memUsed / memTotal * 100d, 0d, 100d);
+                sensors.Add(SensorFactory.Create(
+                    $"gpu.{index}.memory",
+                    GroupPath.From("GPU", $"NVIDIA {name}", "Memory"),
+                    $"{name} Memory",
+                    SensorType.GpuMemoryUsage,
+                    percent,
+                    "%",
+                    Name,
+                    description: $"{memUsed:F0}/{memTotal:F0} MiB"));
             }
         }
 

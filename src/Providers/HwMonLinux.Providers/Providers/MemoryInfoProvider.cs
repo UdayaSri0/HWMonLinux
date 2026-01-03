@@ -37,9 +37,31 @@ public sealed class MemoryInfoProvider : ISensorProvider
 
         var readings = new List<SensorReading>
         {
-            new("memory.usage.percent", "RAM Usage", SensorType.MemoryUsage, snapshot.UsagePercentage, "%", Name,
-                Description: $"{usedGiB:F1} / {totalGiB:F1} GiB"),
-            new("memory.available", "Available RAM", SensorType.MemoryAvailable, availableGiB, "GiB", Name)
+            SensorFactory.Create(
+                "memory.usage.percent",
+                GroupPath.From("Memory", "Usage"),
+                "RAM Usage",
+                SensorType.MemoryUsage,
+                snapshot.UsagePercentage,
+                "%",
+                Name,
+                description: $"{usedGiB:F1} / {totalGiB:F1} GiB"),
+            SensorFactory.Create(
+                "memory.used",
+                GroupPath.From("Memory", "Usage"),
+                "Used RAM",
+                SensorType.MemoryUsed,
+                usedGiB,
+                "GiB",
+                Name),
+            SensorFactory.Create(
+                "memory.available",
+                GroupPath.From("Memory", "Usage"),
+                "Available RAM",
+                SensorType.MemoryAvailable,
+                availableGiB,
+                "GiB",
+                Name)
         };
 
         return readings;

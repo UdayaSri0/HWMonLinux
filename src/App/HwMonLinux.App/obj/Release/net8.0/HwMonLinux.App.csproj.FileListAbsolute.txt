@@ -74,4 +74,5 @@
 /home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/bin/Release/net8.0/HwMonLinux.Providers.pdb
 /home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Release/net8.0/HwMonLinux.App.genruntimeconfig.cache
 /home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Release/net8.0/ref/HwMonLinux.App.dll
+/home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Release/net8.0/HwMonLinux.App.sourcelink.json
 /home/lenovo/Documents/Projects/HwMonLinux/src/App/HwMonLinux.App/obj/Release/net8.0/HwMonLinux.App.csproj.CopyComplete

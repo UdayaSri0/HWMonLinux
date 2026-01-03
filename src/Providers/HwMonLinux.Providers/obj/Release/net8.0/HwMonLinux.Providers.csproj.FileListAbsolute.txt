@@ -12,4 +12,5 @@
 /home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/Release/net8.0/refint/HwMonLinux.Providers.dll
 /home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/Release/net8.0/HwMonLinux.Providers.pdb
 /home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/Release/net8.0/ref/HwMonLinux.Providers.dll
+/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/Release/net8.0/HwMonLinux.Providers.sourcelink.json
 /home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/Release/net8.0/HwMonLinux.Providers.csproj.CopyComplete

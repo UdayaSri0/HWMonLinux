@@ -43,16 +43,23 @@ public sealed class CpuLoadProvider : ISensorProvider
             }
 
             var usage = pair.Value.CalculateUsage(previous);
-            var type = pair.Key.Equals("cpu", StringComparison.OrdinalIgnoreCase)
-                ? SensorType.CpuLoad
-                : SensorType.CpuLoad;
-
             var sensorId = $"cpu.load.{pair.Key.ToLowerInvariant()}";
             var friendlyName = pair.Key.Equals("cpu", StringComparison.OrdinalIgnoreCase)
                 ? "CPU Load"
                 : $"{pair.Key.ToUpperInvariant()} Load";
 
-            readings.Add(new SensorReading(sensorId, friendlyName, type, usage, "%", Name));
+            var group = pair.Key.Equals("cpu", StringComparison.OrdinalIgnoreCase)
+                ? GroupPath.From("CPU", "Load", "Total")
+                : GroupPath.From("CPU", "Load", pair.Key.ToUpperInvariant());
+
+            readings.Add(SensorFactory.Create(
+                sensorId,
+                group,
+                friendlyName,
+                SensorType.CpuLoad,
+                usage,
+                "%",
+                Name));
         }
 
         _previousSnapshot = snapshot;

@@ -7,14 +7,20 @@
         d:DesignWidth="1200"
         d:DesignHeight="700"
         x:Class="HwMonLinux.App.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="HWMon Linux Monitor"
+        x:DataType="vm:MainWindowViewModel"
         Width="1100"
         Height="720">
 
-    <Grid RowDefinitions="Auto,Auto,*" Margin="20">
-        <Border CornerRadius="8" Padding="16" Background="{DynamicResource ThemeBackgroundBrush}">
+    <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="0,0,0,0">
+        <Menu Grid.Row="0">
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About" Click="OnAboutClick"/>
+            </MenuItem>
+        </Menu>
+
+        <Border Grid.Row="1" Margin="20,10,20,0" CornerRadius="8" Padding="16" Background="{DynamicResource ThemeBackgroundBrush}">
             <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="16" RowDefinitions="Auto,Auto">
                 <StackPanel Orientation="Horizontal" Spacing="12">
                     <TextBlock Text="HWMon Linux"
@@ -49,7 +55,7 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" Margin="0,16,0,0" Padding="12" CornerRadius="8" Background="{DynamicResource ThemeBackgroundBrush}">
+        <Border Grid.Row="2" Margin="20,16,20,0" Padding="12" CornerRadius="8" Background="{DynamicResource ThemeBackgroundBrush}">
             <ItemsControl ItemsSource="{Binding SensorCards}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -71,37 +77,41 @@
             </ItemsControl>
         </Border>
 
-        <Grid Grid.Row="2" Margin="0,16,0,0" RowDefinitions="Auto,*" RowSpacing="8">
+        <Grid Grid.Row="3" Margin="20,16,20,20" RowDefinitions="Auto,Auto,*" RowSpacing="8">
             <StackPanel Orientation="Horizontal" Spacing="8">
                 <TextBox Width="280"
                          Watermark="Search sensors"
                          Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Text="{Binding Sensors.Count, StringFormat='{}{0} sensors visible'}"
-                           VerticalAlignment="Center"
-                           Foreground="{DynamicResource ThemeForegroundLowBrush}"/>
+                <Button Content="Reset Min/Max"
+                        Command="{Binding ResetStatsCommand}"/>
             </StackPanel>
 
-            <DataGrid Grid.Row="1"
-                      ItemsSource="{Binding Sensors}"
-                      AutoGenerateColumns="False"
-                      HeadersVisibility="Column"
-                      CanUserReorderColumns="False"
-                      CanUserSortColumns="True"
-                      GridLinesVisibility="Horizontal"
-                      IsReadOnly="True">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Width="2*"
-                                         Binding="{CompiledBinding Path=Name, DataType=vm:SensorRowViewModel}"/>
-                    <DataGridTextColumn Header="Value" Width="*"
-                                         Binding="{CompiledBinding Path=Value, DataType=vm:SensorRowViewModel}" />
-                    <DataGridTextColumn Header="Type" Width="*"
-                                         Binding="{CompiledBinding Path=Type, DataType=vm:SensorRowViewModel}" />
-                    <DataGridTextColumn Header="Source" Width="*"
-                                         Binding="{CompiledBinding Path=Source, DataType=vm:SensorRowViewModel}" />
-                    <DataGridTextColumn Header="Details" Width="2*"
-                                         Binding="{CompiledBinding Path=Description, DataType=vm:SensorRowViewModel}"/>
-                </DataGrid.Columns>
-            </DataGrid>
+            <Grid Grid.Row="1" ColumnDefinitions="3*,*,*,*" Margin="0,4,0,0">
+                <TextBlock Text="Sensor" FontWeight="SemiBold"/>
+                <TextBlock Text="Value" Grid.Column="1" FontWeight="SemiBold"/>
+                <TextBlock Text="Min" Grid.Column="2" FontWeight="SemiBold"/>
+                <TextBlock Text="Max" Grid.Column="3" FontWeight="SemiBold"/>
+            </Grid>
+
+            <TreeView Grid.Row="2"
+                      ItemsSource="{Binding RootNodes}">
+                <TreeView.ItemTemplate>
+                    <TreeDataTemplate DataType="vm:SensorTreeNode"
+                                      ItemsSource="{Binding Children}">
+                        <Grid ColumnDefinitions="3*,*,*,*" Margin="0,2">
+                            <TextBlock Grid.Column="0"
+                                       Text="{Binding Title}"
+                                       FontWeight="{Binding IsLeaf, Converter={StaticResource LeafFontWeightConverter}}"/>
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding DisplayValue}"/>
+                            <TextBlock Grid.Column="2"
+                                       Text="{Binding DisplayMin}"/>
+                            <TextBlock Grid.Column="3"
+                                       Text="{Binding DisplayMax}"/>
+                        </Grid>
+                    </TreeDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
         </Grid>
     </Grid>
 </Window>
