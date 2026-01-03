@@ -75,9 +75,11 @@ public sealed class SensorReading
         "GB" => v => $"{v:F1} GB",
         "GiB" => v => $"{v:F1} GiB",
         "W" => v => $"{v:F1} W",
+        "Wh" => v => $"{v:F1} Wh",
         "V" => v => $"{v:F3} V",
         "A" => v => $"{v:F2} A",
         "mWh" => v => $"{v:F0} mWh",
+        "h" => v => $"{v:F0} h",
         "%" => v => $"{v:F1} %",
         _ => v => $"{v.ToString(CultureInfo.InvariantCulture)} {unit}".Trim()
     };

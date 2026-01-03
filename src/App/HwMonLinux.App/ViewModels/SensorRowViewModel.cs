@@ -50,7 +50,9 @@ public sealed partial class SensorRowViewModel : ObservableObject
         _unit = reading.Unit;
         Name = reading.Name;
         Value = reading.FormattedValue;
-        Type = reading.Type.ToString();
+        Type = reading.Metadata is not null && reading.Metadata.TryGetValue("typeDisplay", out var typeDisplay)
+            ? typeDisplay
+            : reading.Type.ToString();
         Source = reading.Source;
         Description = reading.Description;
     }

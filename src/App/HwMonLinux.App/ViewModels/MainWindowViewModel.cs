@@ -1,12 +1,15 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using HwMonLinux.App.Models;
+using HwMonLinux.App.Services;
 using HwMonLinux.Core;
 using HwMonLinux.Providers.Services;
 
@@ -15,24 +18,37 @@ namespace HwMonLinux.App.ViewModels;
 public sealed partial class MainWindowViewModel : ViewModelBase, IDisposable
 {
     private readonly SensorCollectorService _collector;
+    private readonly SettingsService _settings;
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly ObservableCollection<SensorCardViewModel> _cardCollection = new();
     private readonly ObservableCollection<SensorTreeNode> _rootNodes = new();
     private readonly Dictionary<string, SensorRowViewModel> _rowLookup = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, SensorTreeNode> _nodeIndex = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _expandedKeys = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ObservableCollection<ProviderDiagnosticViewModel> _providerDiagnostics = new();
+    private readonly Dictionary<string, ProviderDiagnosticViewModel> _diagnosticLookup = new(StringComparer.OrdinalIgnoreCase);
     private readonly SensorStatsStore _statsStore = new();
     private readonly List<CardBinding> _cardBindings;
+    private readonly IReadOnlyList<ThemeMode> _themeModes = Enum.GetValues<ThemeMode>();
     private bool _isDisposed;
     private double _refreshIntervalSeconds;
     private string _filterText = string.Empty;
     private DateTimeOffset _lastUpdated = DateTimeOffset.MinValue;
     private string? _warningText;
+    private ThemeMode _selectedThemeMode;
+    private int _totalReadings;
+    private int _visibleSensors;
+    private int _rootNodeCount;
 
-    public MainWindowViewModel(SensorCollectorService collector)
+    public MainWindowViewModel(SensorCollectorService collector, SettingsService settings)
     {
         _collector = collector;
+        _settings = settings;
         _refreshIntervalSeconds = Math.Round(_collector.RefreshInterval.TotalSeconds, 1);
+        _selectedThemeMode = _settings.Settings.ThemeMode;
         SensorCards = new ReadOnlyObservableCollection<SensorCardViewModel>(_cardCollection);
         RootNodes = new ReadOnlyObservableCollection<SensorTreeNode>(_rootNodes);
+        ProviderDiagnostics = new ReadOnlyObservableCollection<ProviderDiagnosticViewModel>(_providerDiagnostics);
 
         _cardBindings = CreateCardBindings();
         foreach (var binding in _cardBindings)
@@ -40,12 +56,31 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IDisposable
             _cardCollection.Add(binding.Card);
         }
 
+        ThemeHelper.ApplyTheme(_selectedThemeMode);
         _ = Task.Run(UpdateLoopAsync);
     }
 
     public ReadOnlyObservableCollection<SensorCardViewModel> SensorCards { get; }
 
     public ReadOnlyObservableCollection<SensorTreeNode> RootNodes { get; }
+
+    public ReadOnlyObservableCollection<ProviderDiagnosticViewModel> ProviderDiagnostics { get; }
+
+    public IReadOnlyList<ThemeMode> ThemeModes => _themeModes;
+
+    public ThemeMode SelectedThemeMode
+    {
+        get => _selectedThemeMode;
+        set
+        {
+            if (SetProperty(ref _selectedThemeMode, value))
+            {
+                _settings.Settings.ThemeMode = value;
+                _settings.Save();
+                ThemeHelper.ApplyTheme(value);
+            }
+        }
+    }
 
     public string FilterText
     {
@@ -96,6 +131,35 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IDisposable
 
     public bool HasWarnings => !string.IsNullOrWhiteSpace(_warningText);
 
+    public int TotalReadings
+    {
+        get => _totalReadings;
+        private set
+        {
+            if (SetProperty(ref _totalReadings, value))
+            {
+                OnPropertyChanged(nameof(ShowEmptyState));
+            }
+        }
+    }
+
+    public int VisibleSensors
+    {
+        get => _visibleSensors;
+        private set => SetProperty(ref _visibleSensors, value);
+    }
+
+    public int RootNodeCount
+    {
+        get => _rootNodeCount;
+        private set => SetProperty(ref _rootNodeCount, value);
+    }
+
+    public bool ShowEmptyState => TotalReadings == 0;
+
+    public string EmptyStateHelp =>
+        "No sensor readings yet. Ensure /sys/class/hwmon is present, install lm-sensors and smartmontools (sudo apt install lm-sensors smartmontools; sudo sensors-detect), and keep sysfs hwmon enabled as a fallback.";
+
     [RelayCommand]
     private void ResetStats()
     {
@@ -138,12 +202,15 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IDisposable
     private void ApplySnapshot(Snapshot snapshot)
     {
         LastUpdated = snapshot.Timestamp;
+        TotalReadings = snapshot.TotalSensors;
         WarningText = snapshot.Warnings.Count > 0
             ? string.Join(Environment.NewLine, snapshot.Warnings)
             : null;
 
+        UpdateDiagnostics(snapshot.Diagnostics);
         UpdateCards(snapshot);
         UpdateRows(snapshot);
+        RootNodeCount = _rootNodes.Count;
     }
 
     private void UpdateCards(Snapshot snapshot)
@@ -152,6 +219,21 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IDisposable
         {
             var reading = binding.Selector(snapshot);
             binding.Card.ApplyReading(reading);
+        }
+    }
+
+    private void UpdateDiagnostics(IReadOnlyList<ProviderDiagnostic> diagnostics)
+    {
+        foreach (var diagnostic in diagnostics)
+        {
+            if (!_diagnosticLookup.TryGetValue(diagnostic.Name, out var viewModel))
+            {
+                viewModel = new ProviderDiagnosticViewModel(diagnostic.Name);
+                _diagnosticLookup[diagnostic.Name] = viewModel;
+                _providerDiagnostics.Add(viewModel);
+            }
+
+            viewModel.Update(diagnostic);
         }
     }
 
@@ -168,6 +250,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IDisposable
             row.UpdateFromReading(reading);
             var (min, max) = _statsStore.Update(reading);
             row.ApplyStats(min, max);
+            EnsureNodeForRow(row);
         }
 
         ApplyFilter();
@@ -176,46 +259,141 @@ public sealed partial class MainWindowViewModel : ViewModelBase, IDisposable
     private void ApplyFilter()
     {
         var filter = FilterText?.Trim();
-        var rows = _rowLookup.Values
-            .Where(row => row.MatchesFilter(filter))
-            .ToList();
+        var visibleCount = 0;
+        foreach (var node in _rootNodes)
+        {
+            UpdateVisibility(node, filter, ref visibleCount);
+        }
 
-        var nodes = BuildTree(rows);
-        SynchronizeTree(nodes);
+        VisibleSensors = visibleCount;
     }
 
-    private IReadOnlyList<SensorTreeNode> BuildTree(IReadOnlyList<SensorRowViewModel> rows)
+    private void EnsureNodeForRow(SensorRowViewModel row)
     {
-        var root = new SensorTreeNode("root");
-        foreach (var row in rows.OrderBy(r => string.Join("/", r.GroupPath)).ThenBy(r => r.Name, StringComparer.OrdinalIgnoreCase))
-        {
-            var segments = row.GroupPath.Count > 0
-                ? row.GroupPath
-                : ImmutableArray.Create("Ungrouped");
+        var segments = row.GroupPath.Count > 0
+            ? row.GroupPath
+            : ImmutableArray.Create("Ungrouped");
 
-            var parent = root;
-            foreach (var segment in segments)
+        SensorTreeNode? parent = null;
+        var pathSegments = new List<string>();
+        foreach (var segment in segments)
+        {
+            pathSegments.Add(segment);
+            var groupKey = string.Join("/", pathSegments);
+            parent = GetOrCreateNode(groupKey, segment, null, parent);
+        }
+
+        pathSegments.Add(row.Name);
+        var leafKey = string.Join("/", pathSegments);
+        GetOrCreateNode(leafKey, row.Name, row, parent);
+    }
+
+    private SensorTreeNode GetOrCreateNode(string key, string title, SensorRowViewModel? row, SensorTreeNode? parent)
+    {
+        if (_nodeIndex.TryGetValue(key, out var node))
+        {
+            if (row is not null)
             {
-                parent = parent.GetOrAddChild(segment);
+                node.AttachSensor(row);
             }
 
-            parent.Children.Add(new SensorTreeNode(row.Name, row));
+            return node;
         }
 
-        foreach (var child in root.Children)
+        var isGroup = row is null;
+        var expanded = isGroup && _expandedKeys.Contains(key);
+        if (isGroup && !_expandedKeys.Contains(key))
         {
-            child.SortChildren();
+            expanded = true;
+            _expandedKeys.Add(key);
         }
 
-        return root.Children.ToList();
+        var newNode = new SensorTreeNode(key, title, row, expanded)
+        {
+            IsVisible = true
+        };
+
+        if (isGroup && newNode.IsExpanded)
+        {
+            _expandedKeys.Add(key);
+        }
+
+        newNode.PropertyChanged += OnNodePropertyChanged;
+        _nodeIndex[key] = newNode;
+
+        if (parent is null)
+        {
+            InsertNodeSorted(_rootNodes, newNode);
+        }
+        else
+        {
+            InsertNodeSorted(parent.Children, newNode);
+        }
+
+        return newNode;
     }
 
-    private void SynchronizeTree(IReadOnlyList<SensorTreeNode> nodes)
+    private void InsertNodeSorted(IList<SensorTreeNode> collection, SensorTreeNode node)
     {
-        _rootNodes.Clear();
-        foreach (var node in nodes)
+        var index = 0;
+        while (index < collection.Count && CompareNodes(collection[index], node) <= 0)
         {
-            _rootNodes.Add(node);
+            index++;
+        }
+
+        collection.Insert(index, node);
+    }
+
+    private static int CompareNodes(SensorTreeNode left, SensorTreeNode right)
+    {
+        var groupComparison = left.IsLeaf.CompareTo(right.IsLeaf);
+        if (groupComparison != 0)
+        {
+            return groupComparison;
+        }
+
+        return string.Compare(left.Title, right.Title, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool UpdateVisibility(SensorTreeNode node, string? filter, ref int visibleCount)
+    {
+        var hasVisibleChild = false;
+        foreach (var child in node.Children)
+        {
+            hasVisibleChild |= UpdateVisibility(child, filter, ref visibleCount);
+        }
+
+        var matches = string.IsNullOrWhiteSpace(filter)
+            || (node.IsLeaf && node.Sensor?.MatchesFilter(filter) == true)
+            || (!node.IsLeaf && filter is not null && node.Title.Contains(filter, StringComparison.OrdinalIgnoreCase));
+
+        var isVisible = node.IsLeaf ? matches : matches || hasVisibleChild;
+        node.IsVisible = isVisible;
+        if (node.IsLeaf && isVisible)
+        {
+            visibleCount++;
+        }
+
+        return isVisible;
+    }
+
+    private void OnNodePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is not SensorTreeNode node)
+        {
+            return;
+        }
+
+        if (e.PropertyName == nameof(SensorTreeNode.IsExpanded))
+        {
+            if (node.IsExpanded)
+            {
+                _expandedKeys.Add(node.Key);
+            }
+            else
+            {
+                _expandedKeys.Remove(node.Key);
+            }
         }
     }
 

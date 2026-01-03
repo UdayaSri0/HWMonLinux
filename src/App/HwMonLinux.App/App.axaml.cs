@@ -5,6 +5,7 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using System.Linq;
+using HwMonLinux.App.Services;
 using HwMonLinux.App.ViewModels;
 using HwMonLinux.App.Views;
 using HwMonLinux.Core;
@@ -19,6 +20,7 @@ public partial class App : Application
 {
     private SensorCollectorService? _collector;
     private MainWindowViewModel? _mainViewModel;
+    private SettingsService? _settingsService;
 
     public override void Initialize()
     {
@@ -45,10 +47,14 @@ public partial class App : Application
                 new BatteryProvider()
             };
 
+            _settingsService = new SettingsService();
+            _settingsService.Load();
+            ThemeHelper.ApplyTheme(_settingsService.Settings.ThemeMode);
+
             _collector = new SensorCollectorService(providers, RefreshOptions.Default);
             _collector.StartAsync().GetAwaiter().GetResult();
 
-            _mainViewModel = new MainWindowViewModel(_collector);
+            _mainViewModel = new MainWindowViewModel(_collector, _settingsService);
 
             desktop.MainWindow = new MainWindow
             {
@@ -72,6 +78,8 @@ public partial class App : Application
         {
             await _collector.DisposeAsync();
         }
+
+        _settingsService?.Save();
     }
 
     private void DisableAvaloniaDataAnnotationValidation()

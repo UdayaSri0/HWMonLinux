@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using HwMonLinux.Core;
@@ -79,6 +80,45 @@ public sealed class DiskSmartProvider : ISensorProvider
                     string.Empty,
                     Name,
                     textValue: healthy ? "OK" : "Attention"));
+            }
+
+            if (status.PowerOnHours is double powerOnHours)
+            {
+                sensors.Add(SensorFactory.Create(
+                    $"disk.{disk.Name}.power_on_hours",
+                    GroupPath.From(baseGroup.Concat(new[] { "Health" })),
+                    $"{friendlyName} Power On Hours",
+                    SensorType.DiskHealth,
+                    powerOnHours,
+                    "h",
+                    Name,
+                    metadata: new Dictionary<string, string> { { "typeDisplay", "Power On Hours" } }));
+            }
+
+            if (status.PercentageUsed is double percentUsed)
+            {
+                sensors.Add(SensorFactory.Create(
+                    $"disk.{disk.Name}.percentage_used",
+                    GroupPath.From(baseGroup.Concat(new[] { "Health" })),
+                    $"{friendlyName} Life Used",
+                    SensorType.DiskHealth,
+                    percentUsed,
+                    "%",
+                    Name,
+                    metadata: new Dictionary<string, string> { { "typeDisplay", "Wear" } }));
+            }
+
+            if (status.PowerCycles is double powerCycles)
+            {
+                sensors.Add(SensorFactory.Create(
+                    $"disk.{disk.Name}.power_cycles",
+                    GroupPath.From(baseGroup.Concat(new[] { "Health" })),
+                    $"{friendlyName} Power Cycles",
+                    SensorType.DiskHealth,
+                    powerCycles,
+                    string.Empty,
+                    Name,
+                    metadata: new Dictionary<string, string> { { "typeDisplay", "Power Cycles" } }));
             }
         }
 

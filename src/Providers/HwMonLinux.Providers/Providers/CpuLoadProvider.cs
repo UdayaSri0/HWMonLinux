@@ -45,12 +45,12 @@ public sealed class CpuLoadProvider : ISensorProvider
             var usage = pair.Value.CalculateUsage(previous);
             var sensorId = $"cpu.load.{pair.Key.ToLowerInvariant()}";
             var friendlyName = pair.Key.Equals("cpu", StringComparison.OrdinalIgnoreCase)
-                ? "CPU Load"
-                : $"{pair.Key.ToUpperInvariant()} Load";
+                ? "CPU Utilization"
+                : $"{pair.Key.ToUpperInvariant()} Utilization";
 
             var group = pair.Key.Equals("cpu", StringComparison.OrdinalIgnoreCase)
-                ? GroupPath.From("CPU", "Load", "Total")
-                : GroupPath.From("CPU", "Load", pair.Key.ToUpperInvariant());
+                ? GroupPath.From("CPU", "Utilization", "Total")
+                : GroupPath.From("CPU", "Utilization", pair.Key.ToUpperInvariant());
 
             readings.Add(SensorFactory.Create(
                 sensorId,

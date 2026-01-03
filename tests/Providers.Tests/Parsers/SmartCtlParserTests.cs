@@ -14,6 +14,13 @@ public class SmartCtlParserTests
                      "device": {
                        "name": "sda"
                      },
+                     "power_on_time": {
+                       "hours": 123
+                     },
+                     "nvme_smart_health_information_log": {
+                       "percentage_used": 7,
+                       "power_cycles": 42
+                     },
                      "smart_status": {
                        "passed": true
                      },
@@ -29,5 +36,8 @@ public class SmartCtlParserTests
         Assert.Equal("sda", status!.DeviceIdentifier);
         Assert.True(status.IsHealthy);
         Assert.Equal(30, status.TemperatureCelsius);
+        Assert.Equal(123, status.PowerOnHours);
+        Assert.Equal(7, status.PercentageUsed);
+        Assert.Equal(42, status.PowerCycles);
     }
 }

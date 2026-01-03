@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using HwMonLinux.Core;
 using HwMonLinux.Providers.Abstractions;
@@ -99,9 +101,10 @@ public sealed class LmSensorsJsonProvider : ISensorProvider
                 friendlyName = label ?? $"{chipName} {sectionName}";
             }
 
+            var groupPath = BuildGroupPath(chipName, sensorType, groupLabel, friendlyName);
             yield return SensorFactory.Create(
                 $"{chipName}.{property.Name}".ToLowerInvariant(),
-                GroupPath.From("Sensors", chipName, groupLabel),
+                groupPath,
                 friendlyName,
                 sensorType,
                 value,
@@ -158,4 +161,57 @@ public sealed class LmSensorsJsonProvider : ISensorProvider
         "curr" => "A",
         _ => string.Empty
     };
+
+    private static IReadOnlyList<string> BuildGroupPath(string chipName, SensorType type, string groupLabel, string? friendlyName)
+    {
+        var root = GuessRoot(chipName, friendlyName, type);
+        if (root.Equals("Sensors", StringComparison.OrdinalIgnoreCase))
+        {
+            return GroupPath.From(root, chipName, groupLabel);
+        }
+
+        return GroupPath.From(root, groupLabel);
+    }
+
+    private static string GuessRoot(string chipName, string? friendlyName, SensorType type)
+    {
+        var lowerChip = chipName.ToLowerInvariant();
+        var lowerName = friendlyName?.ToLowerInvariant();
+
+        if (lowerChip.Contains("coretemp", StringComparison.OrdinalIgnoreCase) ||
+            lowerName?.Contains("cpu", StringComparison.OrdinalIgnoreCase) == true ||
+            lowerName?.Contains("package", StringComparison.OrdinalIgnoreCase) == true ||
+            type == SensorType.CpuTemperature ||
+            (type == SensorType.Power && lowerName?.Contains("cpu", StringComparison.OrdinalIgnoreCase) == true))
+        {
+            return "CPU";
+        }
+
+        if (lowerChip.Contains("gpu", StringComparison.OrdinalIgnoreCase) ||
+            lowerName?.Contains("gpu", StringComparison.OrdinalIgnoreCase) == true ||
+            type == SensorType.GpuTemperature ||
+            (type == SensorType.Power && lowerName?.Contains("gpu", StringComparison.OrdinalIgnoreCase) == true))
+        {
+            return "GPU";
+        }
+
+        if (lowerName?.Contains("dimm", StringComparison.OrdinalIgnoreCase) == true ||
+            lowerName?.Contains("sodimm", StringComparison.OrdinalIgnoreCase) == true ||
+            lowerName?.Contains("mem", StringComparison.OrdinalIgnoreCase) == true)
+        {
+            return "Memory";
+        }
+
+        if (lowerChip.Contains("nvme", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Disks";
+        }
+
+        if (type == SensorType.FanSpeed)
+        {
+            return "Fans";
+        }
+
+        return "Sensors";
+    }
 }

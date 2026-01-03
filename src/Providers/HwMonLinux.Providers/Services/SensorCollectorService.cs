@@ -1,4 +1,5 @@
-using System.Collections.ObjectModel;
+using System;
+using System.Linq;
 using System.Threading.Channels;
 using HwMonLinux.Core;
 
@@ -6,7 +7,7 @@ namespace HwMonLinux.Providers.Services;
 
 public sealed class SensorCollectorService : IAsyncDisposable
 {
-    private readonly IReadOnlyList<ISensorProvider> _providers;
+    private readonly CompositeSensorProvider _compositeProvider;
     private readonly Channel<Snapshot> _channel = Channel.CreateUnbounded<Snapshot>(new UnboundedChannelOptions
     {
         SingleWriter = true,
@@ -19,7 +20,8 @@ public sealed class SensorCollectorService : IAsyncDisposable
 
     public SensorCollectorService(IEnumerable<ISensorProvider> providers, RefreshOptions? options = null)
     {
-        _providers = providers.ToList();
+        var providerList = providers.ToList();
+        _compositeProvider = new CompositeSensorProvider(providerList);
         _currentInterval = (options ?? RefreshOptions.Default).Interval;
     }
 
@@ -95,8 +97,7 @@ public sealed class SensorCollectorService : IAsyncDisposable
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            var (sensors, warnings) = await CollectAsync(cancellationToken).ConfigureAwait(false);
-            var snapshot = new Snapshot(DateTimeOffset.UtcNow, sensors, warnings);
+            var snapshot = await CollectSnapshotAsync(cancellationToken).ConfigureAwait(false);
             LatestSnapshot = snapshot;
             await _channel.Writer.WriteAsync(snapshot, cancellationToken).ConfigureAwait(false);
 
@@ -117,36 +118,19 @@ public sealed class SensorCollectorService : IAsyncDisposable
         _channel.Writer.TryComplete();
     }
 
-    private async Task<(IReadOnlyList<SensorReading> sensors, IReadOnlyList<string> warnings)> CollectAsync(CancellationToken cancellationToken)
+    private async Task<Snapshot> CollectSnapshotAsync(CancellationToken cancellationToken)
     {
-        var readings = new List<SensorReading>();
-        var warnings = new List<string>();
+        var result = await _compositeProvider.CollectAsync(cancellationToken).ConfigureAwait(false);
+        var warnings = result.Diagnostics
+            .Where(d => d.Status != ProviderStatus.Success)
+            .Select(d => $"{d.Name}: {d.Message ?? d.Status.ToString()}")
+            .ToList();
 
-        foreach (var provider in _providers)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            try
-            {
-                if (!await provider.IsAvailableAsync(cancellationToken).ConfigureAwait(false))
-                {
-                    continue;
-                }
-
-                var providerReadings = await provider.GetSensorReadingsAsync(cancellationToken).ConfigureAwait(false);
-                readings.AddRange(providerReadings);
-            }
-            catch (OperationCanceledException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                warnings.Add($"{provider.Name}: {ex.Message}");
-            }
-        }
-
-        return (readings.AsReadOnly(), warnings.AsReadOnly());
+        return new Snapshot(
+            DateTimeOffset.UtcNow,
+            result.Readings,
+            warnings.AsReadOnly(),
+            result.Diagnostics);
     }
 
     public async ValueTask DisposeAsync()

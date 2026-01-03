@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HwMonLinux.Providers")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1e71fae29b72ed56ace8335f24fcd9bc491c6fe6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dc59dd489089b5f264e648d6b1c26d474596b40b")]
 [assembly: System.Reflection.AssemblyProductAttribute("HwMonLinux.Providers")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HwMonLinux.Providers")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

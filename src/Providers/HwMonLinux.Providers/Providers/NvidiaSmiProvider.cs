@@ -20,7 +20,7 @@ public sealed class NvidiaSmiProvider : ISensorProvider
 
     public async Task<IReadOnlyCollection<SensorReading>> GetSensorReadingsAsync(CancellationToken cancellationToken)
     {
-        var args = "--query-gpu=index,name,temperature.gpu,utilization.gpu,fan.speed,memory.used,memory.total --format=csv,noheader,nounits";
+        var args = "--query-gpu=index,name,temperature.gpu,utilization.gpu,fan.speed,memory.used,memory.total,power.draw,power.limit --format=csv,noheader,nounits";
         var result = await _processRunner.RunAsync("nvidia-smi", args, cancellationToken).ConfigureAwait(false);
         if (!result.IsSuccess)
         {
@@ -58,8 +58,8 @@ public sealed class NvidiaSmiProvider : ISensorProvider
             {
                 sensors.Add(SensorFactory.Create(
                     $"gpu.{index}.load",
-                    GroupPath.From("GPU", $"NVIDIA {name}", "Load"),
-                    $"{name} Load",
+                    GroupPath.From("GPU", $"NVIDIA {name}", "Utilization"),
+                    $"{name} Utilization",
                     SensorType.GpuLoad,
                     load,
                     "%",
@@ -70,7 +70,7 @@ public sealed class NvidiaSmiProvider : ISensorProvider
             {
                 sensors.Add(SensorFactory.Create(
                     $"gpu.{index}.fan",
-                    GroupPath.From("GPU", $"NVIDIA {name}", "Cooling"),
+                    GroupPath.From("GPU", $"NVIDIA {name}", "Fans"),
                     $"{name} Fan",
                     SensorType.GpuFanSpeed,
                     fan,
@@ -93,6 +93,30 @@ public sealed class NvidiaSmiProvider : ISensorProvider
                     "%",
                     Name,
                     description: $"{memUsed:F0}/{memTotal:F0} MiB"));
+            }
+
+            if (parts.Length >= 8 && TryParseDouble(parts[7], out var powerDraw))
+            {
+                sensors.Add(SensorFactory.Create(
+                    $"gpu.{index}.power.draw",
+                    GroupPath.From("GPU", $"NVIDIA {name}", "Powers"),
+                    $"{name} Power Draw",
+                    SensorType.Power,
+                    powerDraw,
+                    "W",
+                    Name));
+            }
+
+            if (parts.Length >= 9 && TryParseDouble(parts[8], out var powerLimit))
+            {
+                sensors.Add(SensorFactory.Create(
+                    $"gpu.{index}.power.limit",
+                    GroupPath.From("GPU", $"NVIDIA {name}", "Powers"),
+                    $"{name} Power Limit",
+                    SensorType.Power,
+                    powerLimit,
+                    "W",
+                    Name));
             }
         }
 

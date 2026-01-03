@@ -22,6 +22,9 @@ internal static class SmartCtlParser
 
             var model = TryGetString(root, "model_name") ?? TryGetString(root, "model_family");
             bool? passed = null;
+            double? powerOnHours = null;
+            double? percentageUsed = null;
+            double? powerCycles = null;
 
             if (root.TryGetProperty("smart_status", out var smartStatus) &&
                 smartStatus.TryGetProperty("passed", out var passedElement))
@@ -36,12 +39,42 @@ internal static class SmartCtlParser
                 temperature = current.GetDouble();
             }
 
+            if (root.TryGetProperty("power_on_time", out var powerOn) &&
+                powerOn.TryGetProperty("hours", out var hoursElement))
+            {
+                powerOnHours = hoursElement.GetDouble();
+            }
+
+            if (root.TryGetProperty("nvme_smart_health_information_log", out var nvmeLog))
+            {
+                if (nvmeLog.TryGetProperty("power_on_hours", out var nvmeHours))
+                {
+                    powerOnHours ??= nvmeHours.GetDouble();
+                }
+
+                if (nvmeLog.TryGetProperty("percentage_used", out var usedElement))
+                {
+                    percentageUsed = usedElement.GetDouble();
+                }
+
+                if (nvmeLog.TryGetProperty("power_cycles", out var cyclesElement))
+                {
+                    powerCycles = cyclesElement.GetDouble();
+                }
+
+                if (temperature is null &&
+                    nvmeLog.TryGetProperty("temperature", out var nvmeTemp))
+                {
+                    temperature = nvmeTemp.GetDouble();
+                }
+            }
+
             if (string.IsNullOrWhiteSpace(deviceName))
             {
                 deviceName = "disk";
             }
 
-            return new SmartCtlStatus(deviceName, model, passed, temperature);
+            return new SmartCtlStatus(deviceName, model, passed, temperature, powerOnHours, percentageUsed, powerCycles);
         }
         catch (JsonException)
         {
@@ -71,4 +104,11 @@ internal static class SmartCtlParser
     }
 }
 
-internal sealed record SmartCtlStatus(string DeviceIdentifier, string? Model, bool? IsHealthy, double? TemperatureCelsius);
+internal sealed record SmartCtlStatus(
+    string DeviceIdentifier,
+    string? Model,
+    bool? IsHealthy,
+    double? TemperatureCelsius,
+    double? PowerOnHours,
+    double? PercentageUsed,
+    double? PowerCycles);
