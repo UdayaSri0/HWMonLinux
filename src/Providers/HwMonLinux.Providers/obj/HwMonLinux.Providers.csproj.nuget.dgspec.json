@@ -1,25 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj": {}
+    "/home/mr-star/Documents/GitHub/HWMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj": {}
   },
   "projects": {
-    "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj": {
+    "/home/mr-star/Documents/GitHub/HWMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj",
+        "projectUniqueName": "/home/mr-star/Documents/GitHub/HWMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj",
         "projectName": "HwMonLinux.Core",
-        "projectPath": "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj",
-        "packagesPath": "/home/lenovo/.nuget/packages/",
-        "outputPath": "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/obj/",
+        "projectPath": "/home/mr-star/Documents/GitHub/HWMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj",
+        "packagesPath": "/home/mr-star/.nuget/packages/",
+        "outputPath": "/home/mr-star/Documents/GitHub/HWMonLinux/src/Core/HwMonLinux.Core/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/lenovo/.nuget/NuGet/NuGet.Config"
+          "/home/mr-star/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "/usr/lib/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -32,7 +33,13 @@
           "warnAsError": [
             "NU1605"
           ]
-        }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -48,39 +55,50 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.122/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj": {
+    "/home/mr-star/Documents/GitHub/HWMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj",
+        "projectUniqueName": "/home/mr-star/Documents/GitHub/HWMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj",
         "projectName": "HwMonLinux.Providers",
-        "projectPath": "/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj",
-        "packagesPath": "/home/lenovo/.nuget/packages/",
-        "outputPath": "/home/lenovo/Documents/Projects/HwMonLinux/src/Providers/HwMonLinux.Providers/obj/",
+        "projectPath": "/home/mr-star/Documents/GitHub/HWMonLinux/src/Providers/HwMonLinux.Providers/HwMonLinux.Providers.csproj",
+        "packagesPath": "/home/mr-star/.nuget/packages/",
+        "outputPath": "/home/mr-star/Documents/GitHub/HWMonLinux/src/Providers/HwMonLinux.Providers/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/lenovo/.nuget/NuGet/NuGet.Config"
+          "/home/mr-star/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "/usr/lib/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj": {
-                "projectPath": "/home/lenovo/Documents/Projects/HwMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj"
+              "/home/mr-star/Documents/GitHub/HWMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj": {
+                "projectPath": "/home/mr-star/Documents/GitHub/HWMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj"
               }
             }
           }
@@ -89,7 +107,13 @@
           "warnAsError": [
             "NU1605"
           ]
-        }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -111,12 +135,22 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.22, 8.0.22]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.122/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
