@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "KFFNyqxgLlM=",
+  "dgSpecHash": "S2MudBfFe3U=",
   "success": true,
   "projectFilePath": "/home/mr-star/Documents/GitHub/HWMonLinux/src/Core/HwMonLinux.Core/HwMonLinux.Core.csproj",
   "expectedPackageFiles": [
-    "/home/mr-star/.nuget/packages/microsoft.netcore.app.ref/8.0.22/microsoft.netcore.app.ref.8.0.22.nupkg.sha512",
-    "/home/mr-star/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.22/microsoft.aspnetcore.app.ref.8.0.22.nupkg.sha512"
+    "/home/mr-star/.nuget/packages/microsoft.netcore.app.ref/8.0.25/microsoft.netcore.app.ref.8.0.25.nupkg.sha512",
+    "/home/mr-star/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.25/microsoft.aspnetcore.app.ref.8.0.25.nupkg.sha512"
   ],
   "logs": []
 }
